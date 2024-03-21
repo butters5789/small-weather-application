@@ -8,7 +8,9 @@ const router = createRouter({
       path: '/',
       name: 'WeatherReportView',
       component: WeatherReportView,
-      props: true,
+      props: (route) => ({
+        location: route.query.location,
+      }),
     },
     // {
     //   path: '/about',

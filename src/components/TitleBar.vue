@@ -15,10 +15,12 @@
     align-items: center;
     gap: 1em;
     height: 3.5em;
-    padding: 1em;
+    padding: 0 1em;
 
     background-color: rgba(var(--brand-blue), 1);
     color: rgba(var(--white), 1);
+    box-shadow: var(--elevation-2);
+    z-index: 20;
 
     .title-bar__app-title {
       font-size: var(--font-size-large);
