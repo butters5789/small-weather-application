@@ -1,36 +1,34 @@
 <script setup>
   import { useRoute } from 'vue-router'
 
+  import { locations } from '@/data/Locations'
+
   import UINavigationTab from '@/components/componentLibrary/UINavigationTab.vue'
 
   const route = useRoute()
 
-  const links = [
-    {
-      location: 'Rio de Janeiro',
-    },
-    {
-      location: 'Beijing',
-    },
-    {
-      location: 'Los Angeles',
-    },
-  ]
+  const getQuery = (location) => {
+    return location.state
+      ? `${location.city},${location.state},${location.country}`
+      : `${location.city},${location.country}`
+  }
 </script>
 
 <template>
   <nav class="main-navigation" role="navigation">
     <RouterLink
-      v-for="link in links"
-      :key="link.location"
+      v-for="location in locations"
+      :key="location.city"
       :to="{
         name: 'WeatherReportView',
-        query: { location: link.location },
+        query: {
+          q: getQuery(location),
+        },
       }"
     >
       <UINavigationTab
-        :title="link.location"
-        :is-selected="route.query.location === link.location"
+        :title="location.city"
+        :is-selected="route.query.q === getQuery(location)"
       />
     </RouterLink>
   </nav>
