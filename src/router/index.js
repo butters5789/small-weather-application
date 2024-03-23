@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import { defaultLocation } from '@/data/Locations'
+import { defaultLocation } from '@/data/locations/Locations'
 
 import WeatherReportView from '@/views/WeatherReportView.vue'
 
