@@ -44,11 +44,11 @@
   watchEffect(() => {
     searchResults.value = searchCities(props.location)
 
-    searchResults.value.length === 1 &&
-      forecast.getForecast(
-        searchResults.value[0].lat,
-        searchResults.value[0].lon,
-      )
+    if (searchResults.value.length === 1) {
+      forecast.lat = searchResults.value[0].lat
+      forecast.lon = searchResults.value[0].lon
+      forecast.getForecast()
+    }
   })
 </script>
 

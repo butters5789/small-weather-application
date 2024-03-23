@@ -11,10 +11,12 @@ export const useForecastStore = defineStore('forecast', () => {
   const daily = ref([])
   const hourly = ref([])
   const lastUpdated = ref(null)
+  const lat = ref('')
+  const lon = ref('')
 
-  const getForecast = async (lat, lon) => {
+  const getForecast = async () => {
     const { data } = await axios.get(
-      `${weatherApiUrl}?lat=${lat}&lon=${lon}&exclude=minutely,alerts&units=imperial&appid=${weatherApiKey}`,
+      `${weatherApiUrl}?lat=${lat.value}&lon=${lon.value}&exclude=minutely,alerts&units=imperial&appid=${weatherApiKey}`,
     )
 
     daily.value = data.daily.map((daily) =>
@@ -26,5 +28,5 @@ export const useForecastStore = defineStore('forecast', () => {
     lastUpdated.value = ForecastModel.fromApiLastUpdated(data.current.dt)
   }
 
-  return { daily, hourly, lastUpdated, getForecast }
+  return { daily, hourly, lastUpdated, lat, lon, getForecast }
 })
