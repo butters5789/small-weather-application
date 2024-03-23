@@ -4,6 +4,9 @@
 
   import cities from '@/data/cities/cities_20000.csv'
 
+  import ForecastNextDays from '@/components/ForecastNextDays.vue'
+  import ForecastNextHours from '@/components/ForecastNextHours.vue'
+
   const forecast = useForecastStore()
 
   const props = defineProps({
@@ -16,7 +19,7 @@
   const searchCities = (query) => {
     const queryArray = query.replace(/, /g, ',').split(',')
 
-    const filteredCities = cities.filter((city) => {
+    return cities.filter((city) => {
       const searchWeight = [
         'city_name',
         'state_code',
@@ -34,24 +37,34 @@
 
       return searchWeight >= queryArray.length
     })
+  }
 
-    return filteredCities.length === 0 ? filteredCities[0] : filteredCities
+  const displaySearchResults = (cities) => {
+    console.log('more than 1 result', cities)
   }
 
   watchEffect(() => {
-    searchCities(props.location)
+    const filteredCities = searchCities(props.location)
+
+    filteredCities.length === 1
+      ? forecast.getForecast(filteredCities[0].lat, filteredCities[0].lon)
+      : displaySearchResults(filteredCities)
   })
 </script>
 
 <template>
-  <main>
-    <section>
-      <h2>Next hours</h2>
-      {{ location }}
-    </section>
+  <main class="weather-report-view">
+    <ForecastNextHours :hourlyForecast="forecast.hourly" :numberOfHours="24" />
 
-    <section>
-      <h2>Next 5 days</h2>
-    </section>
+    <ForecastNextDays :dailyForecast="forecast.daily" :numberOfDays="5" />
   </main>
 </template>
+
+<style lang="scss">
+  .weather-report-view {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+    padding: 1.5em 1em;
+  }
+</style>

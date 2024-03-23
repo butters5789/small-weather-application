@@ -1,7 +1,7 @@
 <script setup>
   import { useRoute } from 'vue-router'
 
-  import { locations } from '@/data/Locations'
+  import { locations } from '@/data/locations/Locations'
 
   import UINavigationTab from '@/components/componentLibrary/UINavigationTab.vue'
 
@@ -37,8 +37,7 @@
 <style lang="scss">
   .main-navigation {
     display: flex;
-    height: 3em;
-    padding: 0 1em;
+    height: 3.5em;
     background-color: rgba(var(--brand-off-white), 1);
     box-shadow: var(--elevation-1);
     z-index: 10;
