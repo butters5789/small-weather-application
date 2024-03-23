@@ -82,12 +82,6 @@
       align-items: center;
     }
 
-    .forecast-next-days__item-end {
-      display: flex;
-      align-items: center;
-      gap: 0.8em;
-    }
-
     .forecast-next-days__icon {
       width: 80px;
       aspect-ratio: 1 / 1;
@@ -107,11 +101,6 @@
     .forecast-next-days__temp {
       font-size: var(--font-size-medium);
       font-weight: var(--font-weight-bold);
-    }
-
-    .forecast-next-days__rain {
-      color: rgba(var(--font-blue), 1);
-      font-weight: var(--font-weight-semibold);
     }
   }
 </style>

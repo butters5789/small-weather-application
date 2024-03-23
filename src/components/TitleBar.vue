@@ -1,4 +1,8 @@
-<script setup></script>
+<script setup>
+  import { ref } from 'vue'
+
+  const searchQuery = ref('')
+</script>
 
 <template>
   <header class="title-bar">
@@ -6,7 +10,27 @@
       <h1 class="title-bar__app-title">Simple Weather</h1>
     </RouterLink>
 
-    <span class="material-icons title-bar__search-icon">search</span>
+    <span class="title-bar__search">
+      <input
+        type="text"
+        class="title-bar__search-input"
+        placeholder="Search"
+        v-model="searchQuery"
+      />
+
+      <RouterLink
+        class="title-bar__search-button"
+        :to="{
+          name: 'WeatherReportView',
+          query: {
+            q: searchQuery,
+          },
+        }"
+        @click="searchQuery = ''"
+      >
+        <span class="material-icons">search</span>
+      </RouterLink>
+    </span>
   </header>
 </template>
 
@@ -29,7 +53,20 @@
       font-weight: var(--font-weight-bold);
     }
 
-    .title-bar__search-icon {
+    .title-bar__search {
+      display: flex;
+      align-items: center;
+      gap: 0.8em;
+    }
+
+    .title-bar__search-input {
+      height: 2em;
+      border-radius: 0.4em;
+      padding: 0 0.8em;
+    }
+
+    .title-bar__search-button {
+      display: flex;
       color: rgba(var(--white), 1);
     }
   }

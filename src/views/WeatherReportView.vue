@@ -1,5 +1,5 @@
 <script setup>
-  import { watchEffect } from 'vue'
+  import { ref, watchEffect } from 'vue'
   import { useForecastStore } from '@/stores/forecast'
 
   import cities from '@/data/cities/cities_20000.csv'
@@ -15,6 +15,8 @@
       default: '',
     },
   })
+
+  const searchResults = ref([])
 
   const searchCities = (query) => {
     const queryArray = query.replace(/, /g, ',').split(',')
@@ -39,24 +41,52 @@
     })
   }
 
-  const displaySearchResults = (cities) => {
-    console.log('more than 1 result', cities)
-  }
-
   watchEffect(() => {
-    const filteredCities = searchCities(props.location)
+    searchResults.value = searchCities(props.location)
 
-    filteredCities.length === 1
-      ? forecast.getForecast(filteredCities[0].lat, filteredCities[0].lon)
-      : displaySearchResults(filteredCities)
+    searchResults.value.length === 1 &&
+      forecast.getForecast(
+        searchResults.value[0].lat,
+        searchResults.value[0].lon,
+      )
   })
 </script>
 
 <template>
   <main class="weather-report-view">
-    <ForecastNextHours :hourlyForecast="forecast.hourly" :numberOfHours="24" />
+    <div
+      v-if="!searchResults.length || searchResults.length > 1"
+      class="weather-report-view__search-results"
+    >
+      <span v-if="!searchResults.length">
+        No results match the search criteria.
+      </span>
 
-    <ForecastNextDays :dailyForecast="forecast.daily" :numberOfDays="5" />
+      <template v-if="searchResults.length > 1">
+        <RouterLink
+          v-for="city in searchResults"
+          :key="city.city_id"
+          class="weather-report-view__search-result"
+          :to="{
+            name: 'WeatherReportView',
+            query: {
+              q: `${city.city_name},${city.state_code},${city.country_code}`,
+            },
+          }"
+        >
+          {{ `${city.city_name}, ${city.state_code}, ${city.country_code}` }}
+        </RouterLink>
+      </template>
+    </div>
+
+    <template v-else>
+      <ForecastNextHours
+        :hourlyForecast="forecast.hourly"
+        :numberOfHours="24"
+      />
+
+      <ForecastNextDays :dailyForecast="forecast.daily" :numberOfDays="5" />
+    </template>
   </main>
 </template>
 
@@ -66,5 +96,29 @@
     flex-direction: column;
     gap: 1.5em;
     padding: 1.5em 1em;
+
+    .weather-report-view__search-results {
+      display: flex;
+      flex-direction: column;
+      border-radius: 0.2rem;
+      padding: 1em;
+      background-color: rgba(var(--white), 1);
+      box-shadow: var(--elevation-2);
+    }
+
+    .weather-report-view__search-result {
+      padding: 0.5em;
+      color: rgba(var(--black), 0.6);
+      border-bottom: 1px solid rgba(var(--black), 0.1);
+
+      &:last-of-type {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background-color: rgba(var(--black), 0.1);
+        color: rgba(var(--black), 0.87);
+      }
+    }
   }
 </style>
